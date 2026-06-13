@@ -1,0 +1,35 @@
+name: Build Chromebook Drivers Free Edition
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout Source Code
+      uses: actions/checkout@v4
+
+    - name: Setup MSBuild System
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Download Windows Driver Kit Build Components
+      shell: powershell
+      run: |
+        Set-ExecutionPolicy Bypass -Scope Process -Force
+        Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+        Install-Module -Name Microsoft.Windows.WDK -Force -AllowClobber
+
+    - name: Compile Free Mux Driver (crosectypec)
+      run: |
+        msbuild /p:Configuration=Release /p:Platform=x64 crosectypec.vcxproj
+
+    - name: Compile Free IOM Driver (inteltcss)
+      run: |
+        msbuild /p:Configuration=Release /p:Platform=x64 inteltcss.vcxproj
+        
+    - name: Upload Both Finished Free Binaries
+      uses: actions/upload-artifact@v4
+      with:
+        name: Clean-Free-Chromebook-Drivers
+        path: |
+          x64/Release/crosectypec.sys
+          x64/Release/inteltcss.sys
