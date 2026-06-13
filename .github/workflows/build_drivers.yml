@@ -8,21 +8,21 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v4
 
-    - name: Setup MSBuild System
-      uses: microsoft/setup-msbuild@v2
+    - name: Setup Developer Command Prompt
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: amd64
 
-    - name: Compile Free Mux Driver (crosectypec)
+    - name: Compile Both Free Drivers Direct
       run: |
-        msbuild /p:Configuration=Release /p:Platform=x64 /p:TargetType=Driver /p:DriverType=WDM crosectypec.vcxproj
-
-    - name: Compile Free IOM Driver (inteltcss)
-      run: |
-        msbuild /p:Configuration=Release /p:Platform=x64 /p:TargetType=Driver /p:DriverType=WDM inteltcss.vcxproj
+        cl.exe /O2 /D_AMD64_ /D_KERNEL_MODE /c crosectypec.c
+        link.exe /subsystem:native /driver /entry:DriverEntry /out:crosectypec.sys crosectypec.obj
+        cl.exe /O2 /D_AMD64_ /D_KERNEL_MODE /c inteltcss.c
+        link.exe /subsystem:native /driver /entry:DriverEntry /out:inteltcss.sys inteltcss.obj
         
     - name: Upload Both Finished Free Binaries
       uses: actions/upload-artifact@v4
       with:
         name: Clean-Free-Chromebook-Drivers
         path: |
-          **/crosectypec.sys
-          **/inteltcss.sys
+          *.sys
