@@ -9,16 +9,13 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9E8D7C6B-5A4F-3E2D-1C0B-A9F8E7D6C5B4}</ProjectGuid>
     <RootNamespace>inteltcss</RootNamespace>
-    <ConfigurationType>Driver</ConfigurationType>
-    <DriverType>KMDF</DriverType>
-    <DriverTargetPlatform>Desktop</DriverTargetPlatform>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <TargetExt>.sys</TargetExt>
     <TargetName>inteltcss</TargetName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <TargetVersion>Windows10</TargetVersion>
-    <PlatformToolset>WindowsKernelModeDriver10.0</PlatformToolset>
-    <akademmdfVersion>1.15</akademmdfVersion>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ItemGroup>
