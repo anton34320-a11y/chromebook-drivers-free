@@ -1,11 +1,16 @@
-#include <ntddk.h>
-#include <wdf.h>
+#include <windows.h>
 
-NTSTATUS DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING RegistryPath) {
-    WDF_DRIVER_CONFIG config;
-    NTSTATUS status;
-    WDF_DRIVER_CONFIG_INIT(&config, WDF_NO_EVENT_CALLBACK);
-    config.DriverInitFlags |= WdfDriverInitNonPnpDriver;
-    status = WdfDriverCreate(DriverObject, RegistryPath, WDF_NO_OBJECT_ATTRIBUTES, &config, WDF_NO_HANDLE);
-    return status;
+// Стандартная точка входа для системного образа PE
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
+    UNREFERENCED_PARAMETER(hinstDLL);
+    UNREFERENCED_PARAMETER(fdwReason);
+    UNREFERENCED_PARAMETER(lpvReserved);
+    return TRUE;
+}
+
+// Заглушка точки инициализации службы PnP
+int __stdcall DriverEntry(void* DriverObject, void* RegistryPath) {
+    (void)DriverObject;
+    (void)RegistryPath;
+    return 0; // Возвращаем STATUS_SUCCESS
 }
